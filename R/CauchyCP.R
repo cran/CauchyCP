@@ -19,7 +19,7 @@ CauchyCP <- function(time, status, x, covar=rep(1,length(time)), cutpoints = c(0
   hrs = matrix(NA, ncol=2, nrow=length(cutpoints))
   fit0 = coxph(Surv(time, status) ~ . - x, data=data.analysis)
   fit1 <- coxph(Surv(time, status) ~ ., data=data.analysis)
-  pvals[1] = anova(fit0, fit1, test="LRT")[2,"P(>|Chi|)"]
+  pvals[1] = anova(fit0, fit1, test="LRT")[2, 4] # Pr(>|Chi|)
   tmp = summary(fit1)
   hrs[1,1] = hrs[1,2] = tmp$coefficients["x",2]
   for(l in 2:length(cutpoints)){
@@ -33,7 +33,7 @@ CauchyCP <- function(time, status, x, covar=rep(1,length(time)), cutpoints = c(0
     fit0 <- coxph(Surv(tstart, time, status) ~ . - tgroup - id - x, data=mydat_split)
     fit1 <- coxph(Surv(tstart, time, status) ~ . - tgroup - id + x:strata(tgroup), data=mydat_split)
 
-    pvals[l] = anova(fit0, fit1, test="LRT")[2,"P(>|Chi|)"]
+    pvals[l] = anova(fit0, fit1, test="LRT")[2, 4] # Pr(>|Chi|)
 
     tmp = summary(fit1)
     hrs[l, 1] = tmp$coefficients["x",2]
